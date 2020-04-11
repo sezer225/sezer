@@ -1,0 +1,32 @@
+arp-scan -l
+nmap -A -Pn -p1–65535 10.0.2.5
+nmap -sU -p1–65535 10.0.2.5
+nc -u 10.0.2.5 666
+nc -lvp 4444
+
+Linux base64 decode
+base64 -d - Decodes base64 encoded data
+
+Command
+base64 -d FILE
+
+Parameters
+FILE - The file to be decoded
+
+Return
+Returns the decoded string or file.
+
+Example
+#echo bGludXggYmFzZTY0IGRlY29kZQo= | base64 -d
+Output
+linux base64 decode
+
+echo -n “e6078b9b1aac915d11b9fd59791030bf” | nc -u 10.0.2.5 666
+
+while true; do echo -n “e6078b9b1aac915d11b9fd59791030bf” | nc -u -w1 10.0.2.5 666;
+
+echo “e6078b9b1aac915d11b9fd59791030bf” | nc -u 10.0.2.5 666
+MD5 decode opensesame
+echo “opensesame” | nc -u 10.0.2.5 666
+
+nikto -h 10.0.2.5
